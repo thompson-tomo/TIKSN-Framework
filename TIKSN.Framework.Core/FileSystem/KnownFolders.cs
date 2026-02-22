@@ -37,8 +37,10 @@ public class KnownFolders : IKnownFolders
 
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(this.mainAssembly.Location);
 
-        folderPath = Path.Combine(folderPath, fileVersionInfo.CompanyName ?? throw new InvalidOperationException("Company Name can't be NULL."));
-        folderPath = Path.Combine(folderPath, fileVersionInfo.ProductName ?? throw new InvalidOperationException("Product Name can't be NULL."));
+        folderPath = Path.Combine(folderPath,
+            fileVersionInfo.CompanyName ?? throw new InvalidOperationException("Company Name can't be NULL."));
+        folderPath = Path.Combine(folderPath,
+            fileVersionInfo.ProductName ?? throw new InvalidOperationException("Product Name can't be NULL."));
 
         switch (this.versionConsideration)
         {
@@ -62,7 +64,8 @@ public class KnownFolders : IKnownFolders
                 break;
 
             default:
-                throw new InvalidOperationException($"Unknown Version Consideration: {nameof(this.versionConsideration)}");
+                throw new InvalidOperationException(
+                    $"Unknown Version Consideration: {nameof(this.versionConsideration)}");
         }
 
         return GetFromFolderPath(folderPath);
@@ -70,5 +73,5 @@ public class KnownFolders : IKnownFolders
 
     private Version GetVersion() =>
         this.mainAssembly.GetName().Version
-            ?? throw new InvalidOperationException("Application Version cannot be NULL.");
+        ?? throw new InvalidOperationException("Application Version cannot be NULL.");
 }

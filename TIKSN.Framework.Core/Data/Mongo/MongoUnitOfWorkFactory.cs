@@ -17,7 +17,8 @@ public class MongoUnitOfWorkFactory : IUnitOfWorkFactory
     public async Task<IUnitOfWork> CreateAsync(CancellationToken cancellationToken)
     {
         var mongoClient = this.mongoClientProvider.GetMongoClient();
-        var clientSessionHandle = await mongoClient.StartSessionAsync(options: null, cancellationToken).ConfigureAwait(false);
+        var clientSessionHandle =
+            await mongoClient.StartSessionAsync(options: null, cancellationToken).ConfigureAwait(false);
         var serviceScope = this.serviceProvider.CreateAsyncScope();
         var mongoClientSessionStore = serviceScope.ServiceProvider.GetRequiredService<IMongoClientSessionStore>();
         mongoClientSessionStore.SetClientSessionHandle(clientSessionHandle);

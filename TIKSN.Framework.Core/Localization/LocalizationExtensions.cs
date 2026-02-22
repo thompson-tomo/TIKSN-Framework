@@ -27,7 +27,8 @@ public static class LocalizationExtensions
         params object[] arguments) => stringLocalizer.GetRequiredString(key.ToString(), arguments);
 
     public static string GetRequiredString(this IStringLocalizer stringLocalizer, int key,
-        params object[] arguments) => stringLocalizer.GetRequiredString(key.ToString(CultureInfo.InvariantCulture), arguments);
+        params object[] arguments) =>
+        stringLocalizer.GetRequiredString(key.ToString(CultureInfo.InvariantCulture), arguments);
 
     public static string GetRequiredString(this IStringLocalizer stringLocalizer, string name,
         params object[] arguments)

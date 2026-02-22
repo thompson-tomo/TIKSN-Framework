@@ -14,5 +14,6 @@ public class CurrentCommandContext : ICurrentCommandStore, ICurrentCommandProvid
         return this.command;
     }
 
-    public void SetCurrentCommand(CommandBase command) => this.command = command ?? throw new ArgumentNullException(nameof(command));
+    public void SetCurrentCommand(CommandBase command) =>
+        this.command = command ?? throw new ArgumentNullException(nameof(command));
 }

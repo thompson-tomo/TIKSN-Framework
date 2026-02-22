@@ -76,7 +76,8 @@ public class SwissNationalBank : ISwissNationalBank
     {
         var result = new List<ExchangeRate>();
 
-        var responseStream = await this.httpClient.GetStreamAsync(new Uri(RSSURL), cancellationToken).ConfigureAwait(false);
+        var responseStream =
+            await this.httpClient.GetStreamAsync(new Uri(RSSURL), cancellationToken).ConfigureAwait(false);
 
         var xdoc = XDocument.Load(responseStream);
 
@@ -102,8 +103,8 @@ public class SwissNationalBank : ISwissNationalBank
                 var currency = this.currencyFactory.Create(currencyCode);
 
                 Debug.Assert(string.Equals(exchangeRateElement
-                    ?.Element("{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}observation")
-                    ?.Element("{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}unit")?.Value,
+                        ?.Element("{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}observation")
+                        ?.Element("{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}unit")?.Value,
                     "CHF",
                     StringComparison.Ordinal));
 
@@ -117,9 +118,11 @@ public class SwissNationalBank : ISwissNationalBank
 
     private async Task FetchOnDemandAsync(CancellationToken cancellationToken)
     {
-        if (this.foreignRates.Count == 0 || this.foreignRates.Any(r => r.Value.Item1.Date == this.timeProvider.GetUtcNow().Date))
+        if (this.foreignRates.Count == 0 ||
+            this.foreignRates.Any(r => r.Value.Item1.Date == this.timeProvider.GetUtcNow().Date))
         {
-            _ = await this.GetExchangeRatesAsync(this.timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+            _ = await this.GetExchangeRatesAsync(this.timeProvider.GetUtcNow(), cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 
@@ -177,7 +180,7 @@ public class SwissNationalBank : ISwissNationalBank
             }
         }
         else if (counterCurrency == SwissFranc &&
-            filtered.TryGetValue(baseCurrency, out var rate))
+                 filtered.TryGetValue(baseCurrency, out var rate))
         {
             return rate;
         }

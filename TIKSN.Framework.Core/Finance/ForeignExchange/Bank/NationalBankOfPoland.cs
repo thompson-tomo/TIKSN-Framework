@@ -64,9 +64,12 @@ public class NationalBankOfPoland : INationalBankOfPoland
     {
         var exchangeRates = await this.GetRatesAsync(asOn, cancellationToken).ConfigureAwait(false);
 
-        return [.. exchangeRates
-            .Select(x => x.Pair)
-            .Distinct()];
+        return
+        [
+            .. exchangeRates
+                .Select(x => x.Pair)
+                .Distinct(),
+        ];
     }
 
     public async Task<decimal> GetExchangeRateAsync(
@@ -119,11 +122,7 @@ public class NationalBankOfPoland : INationalBankOfPoland
 
         var requestUrl = new Uri(string.Format(PolishCulture, WebServiceUrlFormat, table, weekAgoWarsaw, asOnWarsaw));
 
-        using var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = requestUrl,
-        };
+        using var request = new HttpRequestMessage { Method = HttpMethod.Get, RequestUri = requestUrl, };
         request.Headers.Accept.Add(AcceptHeaderValue);
 
         var response = await this.httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -136,7 +135,8 @@ public class NationalBankOfPoland : INationalBankOfPoland
         _ = response.EnsureSuccessStatusCode();
 
         var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        var rateTables = await JsonSerializer.DeserializeAsync<RateTable[]>(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var rateTables = await JsonSerializer
+            .DeserializeAsync<RateTable[]>(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return rateTables
             ?.SelectMany(CreateDatesAndRates)
@@ -151,7 +151,14 @@ public class NationalBankOfPoland : INationalBankOfPoland
         var ratesA = await this.GetRatesAsync(TableA, asOn, cancellationToken).ConfigureAwait(false);
         var ratesB = await this.GetRatesAsync(TableB, asOn, cancellationToken).ConfigureAwait(false);
 
-        return [.. ratesA.Concat(ratesB).SelectMany(x => new[] { x, new ExchangeRate(x.Pair.Reverse(), x.AsOn, 1m / x.Rate) })];
+        return
+        [
+            .. ratesA.Concat(ratesB).SelectMany(x => new[]
+            {
+                x,
+                new ExchangeRate(x.Pair.Reverse(), x.AsOn, 1m / x.Rate),
+            }),
+        ];
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

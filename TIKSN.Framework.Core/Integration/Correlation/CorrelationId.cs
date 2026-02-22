@@ -27,7 +27,6 @@ public readonly struct CorrelationId : IEquatable<CorrelationId>
     /// </summary>
     /// <param name="correlationId">Correlation Id</param>
 #pragma warning disable CA2225 // Operator overloads have named alternates
-
     public static implicit operator Seq<byte>(CorrelationId correlationId)
 #pragma warning restore CA2225 // Operator overloads have named alternates
         => correlationId.binaryRepresentation;

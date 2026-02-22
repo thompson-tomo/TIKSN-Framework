@@ -12,7 +12,8 @@ public abstract class CommandBase : PSCmdlet, IDisposable
 
     protected CommandBase() => this.cancellationTokenSource = new CancellationTokenSource();
 
-    protected IServiceProvider Services => this.serviceScope?.ServiceProvider ?? throw new InvalidOperationException("ServiceProvider is not initialized.");
+    protected IServiceProvider Services => this.serviceScope?.ServiceProvider ??
+        throw new InvalidOperationException("ServiceProvider is not initialized.");
 
     public void Dispose()
     {

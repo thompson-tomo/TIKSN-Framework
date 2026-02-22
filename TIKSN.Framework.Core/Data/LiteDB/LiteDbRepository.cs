@@ -66,7 +66,7 @@ public class LiteDbRepository<TDocument, TIdentity> : ILiteDbRepository<TDocumen
     public Task<IReadOnlyList<TDocument>> ListAsync(
         IEnumerable<TIdentity> ids,
         CancellationToken cancellationToken)
-        => Task.FromResult<IReadOnlyList<TDocument>>([.. this.Collection.Find(item => ids.Contains(item.ID))]);
+        => Task.FromResult<IReadOnlyList<TDocument>>([.. this.Collection.Find(item => ids.Contains(item.ID)),]);
 
     public Task<PageResult<TDocument>> PageAsync(
         PageQuery pageQuery,
@@ -75,9 +75,9 @@ public class LiteDbRepository<TDocument, TIdentity> : ILiteDbRepository<TDocumen
         ArgumentNullException.ThrowIfNull(pageQuery);
 
         var items = this.Collection.Find(
-            this.PageQuery,
-            pageQuery.Page.Index * pageQuery.Page.Size,
-            pageQuery.Page.Size)
+                this.PageQuery,
+                pageQuery.Page.Index * pageQuery.Page.Size,
+                pageQuery.Page.Size)
             .ToArray();
 
         Option<long> totalItems = pageQuery.EstimateTotalItems

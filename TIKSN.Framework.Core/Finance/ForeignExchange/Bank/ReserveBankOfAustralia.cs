@@ -81,7 +81,7 @@ public class ReserveBankOfAustralia : IReserveBankOfAustralia
             }
         }
         else if (pair.CounterCurrency == AustralianDollar
-            && this.rates.TryGetValue(pair.BaseCurrency, out var counterRate))
+                 && this.rates.TryGetValue(pair.BaseCurrency, out var counterRate))
         {
             return decimal.One / counterRate;
         }
@@ -95,7 +95,8 @@ public class ReserveBankOfAustralia : IReserveBankOfAustralia
     {
         var result = new List<ExchangeRate>();
 
-        var responseStream = await this.httpClient.GetStreamAsync(new Uri(RSS), cancellationToken).ConfigureAwait(false);
+        var responseStream =
+            await this.httpClient.GetStreamAsync(new Uri(RSS), cancellationToken).ConfigureAwait(false);
 
         var xdoc = await XDocument.LoadAsync(responseStream, LoadOptions.None, cancellationToken).ConfigureAwait(false);
 
@@ -108,7 +109,8 @@ public class ReserveBankOfAustralia : IReserveBankOfAustralia
     {
         if (this.timeProvider.GetUtcNow() - this.lastFetchDate > TimeSpan.FromDays(1d))
         {
-            _ = await this.GetExchangeRatesAsync(this.timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+            _ = await this.GetExchangeRatesAsync(this.timeProvider.GetUtcNow(), cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 
@@ -117,8 +119,8 @@ public class ReserveBankOfAustralia : IReserveBankOfAustralia
         lock (this.rates)
         {
             foreach (var item in xdoc
-                ?.Element("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}RDF")
-                ?.Elements("{http://purl.org/rss/1.0/}item") ?? [])
+                         ?.Element("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}RDF")
+                         ?.Elements("{http://purl.org/rss/1.0/}item") ?? [])
             {
                 this.PopulateResultItem(item, result);
             }
@@ -169,10 +171,10 @@ public class ReserveBankOfAustralia : IReserveBankOfAustralia
         List<ExchangeRate> result)
     {
         var baseCurrencyElement = exchangeRateElement?.Element(
-                        "{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}baseCurrency");
+            "{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}baseCurrency");
 
         var targetCurrencyElement = exchangeRateElement?.Element(
-                "{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}targetCurrency");
+            "{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}targetCurrency");
 
         var observationValueElement = exchangeRateElement
             ?.Element("{http://www.cbwiki.net/wiki/index.php/Specification_1.2/}observation")
@@ -185,10 +187,10 @@ public class ReserveBankOfAustralia : IReserveBankOfAustralia
         Debug.Assert(string.Equals(baseCurrencyElement?.Value, "AUD", StringComparison.Ordinal));
 
         this.PopulateResultEntry(
-                    result,
-                    targetCurrencyElement,
-                    observationValueElement,
-                    periodElement);
+            result,
+            targetCurrencyElement,
+            observationValueElement,
+            periodElement);
     }
 
     private void VerifyDate(DateTimeOffset asOn)

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
-using LanguageExt;
+using System.Text.Json;
 using TIKSN.Globalization;
 
 namespace TIKSN.Finance.ForeignExchange.Bank;
@@ -9,7 +9,10 @@ public class BankOfCanada : IBankOfCanada
 {
     private static readonly TimeZoneInfo BankTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
     private static readonly CurrencyInfo CanadianDollar = new(new RegionInfo("en-CA"));
-    private static readonly Uri RestURL = new("https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json");
+
+    private static readonly Uri RestURL =
+        new("https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json");
+
     private readonly ICurrencyFactory currencyFactory;
     private readonly HttpClient httpClient;
     private readonly Dictionary<DateOnly, Dictionary<CurrencyInfo, decimal>> rates;
@@ -105,7 +108,8 @@ public class BankOfCanada : IBankOfCanada
 
             if (asOnDate == rawItem.Item2)
             {
-                result.Add(new ExchangeRate(new CurrencyPair(currency, CanadianDollar), GetRateDateTimeOffset(rawItem.Item2), rawItem.Item3));
+                result.Add(new ExchangeRate(new CurrencyPair(currency, CanadianDollar),
+                    GetRateDateTimeOffset(rawItem.Item2), rawItem.Item3));
             }
 
             ratesList.Add(new Tuple<CurrencyInfo, DateOnly, decimal>(currency, rawItem.Item2, rawItem.Item3));
@@ -142,7 +146,8 @@ public class BankOfCanada : IBankOfCanada
     {
         if (this.timeProvider.GetUtcNow() - this.lastFetchDate > TimeSpan.FromDays(1d))
         {
-            _ = await this.GetExchangeRatesAsync(this.timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+            _ = await this.GetExchangeRatesAsync(this.timeProvider.GetUtcNow(), cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 
@@ -151,7 +156,7 @@ public class BankOfCanada : IBankOfCanada
         var responseStream = await this.httpClient.GetStreamAsync(restUrl).ConfigureAwait(false);
 
         using var streamReader = new StreamReader(responseStream);
-        var root = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await streamReader.ReadToEndAsync().ConfigureAwait(false));
+        var root = JsonSerializer.Deserialize<JsonElement>(await streamReader.ReadToEndAsync().ConfigureAwait(false));
 
         var result = new List<Tuple<string, DateOnly, decimal>>();
 
@@ -161,10 +166,11 @@ public class BankOfCanada : IBankOfCanada
         {
             var d = observation.GetProperty("d");
             var asOn = DateOnly.ParseExact(d.GetString() ?? string.Empty, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            foreach (var fxElement in observation.EnumerateObject().Where(x => x.Name.StartsWith("FX", StringComparison.OrdinalIgnoreCase)))
+            foreach (var fxElement in observation.EnumerateObject()
+                         .Where(x => x.Name.StartsWith("FX", StringComparison.OrdinalIgnoreCase)))
             {
                 Debug.Assert(fxElement.Name.EndsWith("CAD", StringComparison.Ordinal));
-                var targetCurrencyCode = fxElement.Name.Substring(2, 3);
+                var targetCurrencyCode = fxElement.Name.Substring(startIndex: 2, length: 3);
                 var v = fxElement.Value.GetProperty("v");
                 var rate = decimal.Parse(v.GetString() ?? string.Empty, CultureInfo.InvariantCulture);
                 result.Add(new Tuple<string, DateOnly, decimal>(targetCurrencyCode, asOn, rate));
@@ -216,7 +222,7 @@ public class BankOfCanada : IBankOfCanada
             }
         }
         else if (pair.CounterCurrency == CanadianDollar &&
-            this.GetRatesByDate(asOn).Any(r => r.Key == pair.BaseCurrency))
+                 this.GetRatesByDate(asOn).Any(r => r.Key == pair.BaseCurrency))
         {
             return false;
         }

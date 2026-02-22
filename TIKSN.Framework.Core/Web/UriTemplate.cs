@@ -22,7 +22,8 @@ public class UriTemplate
 
             if (resourceLocation.Contains(parameterName, StringComparison.Ordinal))
             {
-                resourceLocation = resourceLocation.Replace(parameterName, escapedParameterValue, StringComparison.Ordinal);
+                resourceLocation =
+                    resourceLocation.Replace(parameterName, escapedParameterValue, StringComparison.Ordinal);
             }
             else
             {
@@ -31,7 +32,7 @@ public class UriTemplate
                 {
                     resourceLocation += queryToAppend;
                 }
-                else if (resourceLocation.Contains('?', StringComparison.Ordinal))
+                else if (resourceLocation.Contains(value: '?', StringComparison.Ordinal))
                 {
                     resourceLocation = $"{resourceLocation}&{queryToAppend}";
                 }

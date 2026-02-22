@@ -8,7 +8,8 @@ namespace TIKSN.Finance.ForeignExchange.Bank;
 public class FederalReserveSystem : IFederalReserveSystem
 {
     private static readonly CompositeFormat DataUrlFormat =
-        CompositeFormat.Parse("https://www.federalreserve.gov/datadownload/Output.aspx?rel=H10&series=60f32914ab61dfab590e0e470153e3ae&lastObs=7&from={0}&to={1}&filetype=sdmx&label=include&layout=seriescolumn");
+        CompositeFormat.Parse(
+            "https://www.federalreserve.gov/datadownload/Output.aspx?rel=H10&series=60f32914ab61dfab590e0e470153e3ae&lastObs=7&from={0}&to={1}&filetype=sdmx&label=include&layout=seriescolumn");
 
     private static readonly CultureInfo EnglishUnitedStates = new("en-US");
     private static readonly CurrencyInfo UnitedStatesDollar = new(new RegionInfo("en-US"));
@@ -79,7 +80,8 @@ public class FederalReserveSystem : IFederalReserveSystem
                 return rate;
             }
         }
-        else if (pair.CounterCurrency == UnitedStatesDollar && rates.TryGetValue(pair.BaseCurrency, out var counterRate))
+        else if (pair.CounterCurrency == UnitedStatesDollar &&
+                 rates.TryGetValue(pair.BaseCurrency, out var counterRate))
         {
             return decimal.One / counterRate;
         }
@@ -105,9 +107,9 @@ public class FederalReserveSystem : IFederalReserveSystem
         var result = new List<ExchangeRate>();
 
         foreach (var seriesElement in xdoc
-            ?.Element("{http://www.SDMX.org/resources/SDMXML/schemas/v1_0/message}MessageGroup")
-            ?.Element("{http://www.federalreserve.gov/structure/compact/common}DataSet")
-            ?.Elements("{http://www.federalreserve.gov/structure/compact/H10_H10}Series") ?? [])
+                     ?.Element("{http://www.SDMX.org/resources/SDMXML/schemas/v1_0/message}MessageGroup")
+                     ?.Element("{http://www.federalreserve.gov/structure/compact/common}DataSet")
+                     ?.Elements("{http://www.federalreserve.gov/structure/compact/H10_H10}Series") ?? [])
         {
             var currencyCode = seriesElement?.Attribute("CURRENCY")?.Value;
             var fx = seriesElement?.Attribute("FX")?.Value;
@@ -119,18 +121,20 @@ public class FederalReserveSystem : IFederalReserveSystem
                 var rates = new Dictionary<DateTimeOffset, decimal>();
 
                 foreach (var obsElement in seriesElement?.Elements(
-                    "{http://www.federalreserve.gov/structure/compact/common}Obs") ?? [])
+                             "{http://www.federalreserve.gov/structure/compact/common}Obs") ?? [])
                 {
                     var obsStatus = obsElement?.Attribute("OBS_STATUS")?.Value;
                     if (!string.Equals(obsStatus, "ND", StringComparison.Ordinal))
                     {
-                        var obsValue = decimal.Parse(obsElement?.Attribute("OBS_VALUE")?.Value ?? string.Empty, EnglishUnitedStates);
-                        var period = DateTimeOffset.Parse(obsElement?.Attribute("TIME_PERIOD")?.Value ?? string.Empty, EnglishUnitedStates);
+                        var obsValue = decimal.Parse(obsElement?.Attribute("OBS_VALUE")?.Value ?? string.Empty,
+                            EnglishUnitedStates);
+                        var period = DateTimeOffset.Parse(obsElement?.Attribute("TIME_PERIOD")?.Value ?? string.Empty,
+                            EnglishUnitedStates);
 
                         decimal obsValueRate;
 
                         if (string.Equals(seriesElement?.Attribute("UNIT")?.Value, "Currency:_Per_USD",
-                            StringComparison.OrdinalIgnoreCase))
+                                StringComparison.OrdinalIgnoreCase))
                         {
                             obsValueRate = obsValue;
                         }

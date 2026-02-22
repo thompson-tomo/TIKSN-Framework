@@ -129,7 +129,7 @@ public class CuidCorrelationService : ICorrelationService
         var pid = Environment.ProcessId % DuetteUpperBoundary;
         var theHostname = this.GetHostname();
         var hostnameHash = theHostname.Split()
-            .Aggregate(theHostname.Length + 36, (prev, c) => prev + c[0])
+                .Aggregate(theHostname.Length + 36, (prev, c) => prev + c[0])
             % DuetteUpperBoundary;
 #pragma warning disable CA5394 // Do not use insecure randomness
         var randomNumber1 = this.random.Next() % QuartetteUpperBoundary;
@@ -232,23 +232,23 @@ public class CuidCorrelationService : ICorrelationService
         var chars = charArrayRepresentation.AsSpan();
         var bytes = byteArrayRepresentation.AsSpan();
 
-        timestampChars = chars.Slice(1, 8);
+        timestampChars = chars.Slice(start: 1, length: 8);
         timestampBytes = bytes[..6];
 
-        counterChars = chars.Slice(1 + 8, 4);
-        counterBytes = bytes.Slice(6, 3);
+        counterChars = chars.Slice(1 + 8, length: 4);
+        counterBytes = bytes.Slice(start: 6, length: 3);
 
-        pidChars = chars.Slice(1 + 8 + 4, 2);
-        pidBytes = bytes.Slice(6 + 3, 2);
+        pidChars = chars.Slice(1 + 8 + 4, length: 2);
+        pidBytes = bytes.Slice(6 + 3, length: 2);
 
-        hostnameChars = chars.Slice(1 + 8 + 4 + 2, 2);
-        hostnameBytes = bytes.Slice(6 + 3 + 2, 2);
+        hostnameChars = chars.Slice(1 + 8 + 4 + 2, length: 2);
+        hostnameBytes = bytes.Slice(6 + 3 + 2, length: 2);
 
-        randomNumber1Chars = chars.Slice(1 + 8 + 4 + 2 + 2, 4);
-        randomNumber1Bytes = bytes.Slice(6 + 3 + 2 + 2, 4);
+        randomNumber1Chars = chars.Slice(1 + 8 + 4 + 2 + 2, length: 4);
+        randomNumber1Bytes = bytes.Slice(6 + 3 + 2 + 2, length: 4);
 
-        randomNumber2Chars = chars.Slice(1 + 8 + 4 + 2 + 2 + 4, 4);
-        randomNumber2Bytes = bytes.Slice(6 + 3 + 2 + 2 + 4, 4);
+        randomNumber2Chars = chars.Slice(1 + 8 + 4 + 2 + 2 + 4, length: 4);
+        randomNumber2Bytes = bytes.Slice(6 + 3 + 2 + 2 + 4, length: 4);
     }
 
     private static Dictionary<char, int> CreateCodeMap()

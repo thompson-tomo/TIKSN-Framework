@@ -6,10 +6,12 @@ namespace TIKSN.Finance.ForeignExchange.Bank;
 
 public class BankOfEngland : IBankOfEngland
 {
-    private static readonly (Dictionary<CurrencyPair, string>, Dictionary<string, CurrencyPair>) SeriesCodesMaps = CreateSeriesCodesMaps();
+    private static readonly (Dictionary<CurrencyPair, string>, Dictionary<string, CurrencyPair>) SeriesCodesMaps =
+        CreateSeriesCodesMaps();
 
     private static readonly CompositeFormat UrlFormat =
-            CompositeFormat.Parse("https://www.bankofengland.co.uk/boeapps/iadb/fromshowcolumns.asp?CodeVer=new&xml.x=yes&Datefrom={0}&Dateto={1}&SeriesCodes={2}");
+        CompositeFormat.Parse(
+            "https://www.bankofengland.co.uk/boeapps/iadb/fromshowcolumns.asp?CodeVer=new&xml.x=yes&Datefrom={0}&Dateto={1}&SeriesCodes={2}");
 
     private readonly HttpClient httpClient;
     private readonly TimeProvider timeProvider;
@@ -34,7 +36,8 @@ public class BankOfEngland : IBankOfEngland
         ArgumentNullException.ThrowIfNull(baseMoney);
         ArgumentNullException.ThrowIfNull(counterCurrency);
 
-        var exchangeRate = await this.GetExchangeRateAsync(baseMoney.Currency, counterCurrency, asOn, cancellationToken).ConfigureAwait(false);
+        var exchangeRate = await this.GetExchangeRateAsync(baseMoney.Currency, counterCurrency, asOn, cancellationToken)
+            .ConfigureAwait(false);
         var rate = exchangeRate.Rate;
 
         return new Money(counterCurrency, baseMoney.Amount * rate);
@@ -103,19 +106,22 @@ public class BankOfEngland : IBankOfEngland
             throw new ArgumentException($"Currency pair {pair} not supported.", nameof(baseCurrency));
         }
 
-        var exchangeRates = await this.GetSeriesCodeExchangeRateAsync(seriesCode, asOn, cancellationToken).ConfigureAwait(false);
+        var exchangeRates = await this.GetSeriesCodeExchangeRateAsync(seriesCode, asOn, cancellationToken)
+            .ConfigureAwait(false);
 
         return exchangeRates
             .Where(x => x.Pair == pair)
             .MinByWithTies(x => x.AsOn - asOn)[0];
     }
 
-    public async Task<IReadOnlyCollection<ExchangeRate>> GetExchangeRatesAsync(DateTimeOffset asOn, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<ExchangeRate>> GetExchangeRatesAsync(DateTimeOffset asOn,
+        CancellationToken cancellationToken)
     {
         List<ExchangeRate> rates = [];
         foreach (var seriesCode in SeriesCodes)
         {
-            var exchangeRates = await this.GetSeriesCodeExchangeRateAsync(seriesCode.Value, asOn, cancellationToken).ConfigureAwait(false);
+            var exchangeRates = await this.GetSeriesCodeExchangeRateAsync(seriesCode.Value, asOn, cancellationToken)
+                .ConfigureAwait(false);
             rates.AddRange(exchangeRates);
         }
 
@@ -253,9 +259,9 @@ public class BankOfEngland : IBankOfEngland
         List<ExchangeRate> rates = [];
 
         foreach (var item in xdoc
-            ?.Element("{http://www.gesmes.org/xml/2002-08-01}Envelope")
-            ?.Element("{https://www.bankofengland.co.uk/website/agg_series}Cube")
-            ?.Elements("{https://www.bankofengland.co.uk/website/agg_series}Cube") ?? [])
+                     ?.Element("{http://www.gesmes.org/xml/2002-08-01}Envelope")
+                     ?.Element("{https://www.bankofengland.co.uk/website/agg_series}Cube")
+                     ?.Elements("{https://www.bankofengland.co.uk/website/agg_series}Cube") ?? [])
         {
             var time = item.Attribute("TIME");
             if (time is not null)
@@ -264,11 +270,11 @@ public class BankOfEngland : IBankOfEngland
 
                 if (estimatedRate != null)
                 {
-                    var year = int.Parse(time.Value.AsSpan(0, 4), CultureInfo.InvariantCulture);
-                    var month = int.Parse(time.Value.AsSpan(5, 2), CultureInfo.InvariantCulture);
+                    var year = int.Parse(time.Value.AsSpan(start: 0, length: 4), CultureInfo.InvariantCulture);
+                    var month = int.Parse(time.Value.AsSpan(start: 5, length: 2), CultureInfo.InvariantCulture);
                     var day = int.Parse(time.Value.AsSpan(8), CultureInfo.InvariantCulture);
 
-                    var itemTime = new DateTimeOffset(year, month, day, 0, 0, 0, TimeSpan.Zero);
+                    var itemTime = new DateTimeOffset(year, month, day, hour: 0, minute: 0, second: 0, TimeSpan.Zero);
 
                     var reverseRate = decimal.Parse(estimatedRate.Value, CultureInfo.InvariantCulture);
                     var rate = decimal.One / reverseRate;

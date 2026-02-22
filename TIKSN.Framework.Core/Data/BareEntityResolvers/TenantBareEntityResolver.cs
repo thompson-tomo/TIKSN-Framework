@@ -10,7 +10,7 @@ public class TenantBareEntityResolver<TEntity, TEntityIdentity, TTenantIdentity>
 
     public TenantBareEntityResolver(
         IQueryRepository<TEntity, TEntityIdentity> queryRepository)
-            => this.queryRepository = queryRepository ?? throw new ArgumentNullException(nameof(queryRepository));
+        => this.queryRepository = queryRepository ?? throw new ArgumentNullException(nameof(queryRepository));
 
     public async Task<TenantEntity<TEntityIdentity, TTenantIdentity>> ResolveAsync(
         TEntityIdentity id,
