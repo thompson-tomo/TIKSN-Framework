@@ -61,8 +61,10 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton(MessageBus.Current);
         services.TryAddSingleton(AnsiConsole.Console);
         services.TryAddSingleton<ISchedulers>(_ => new Schedulers(RxApp.MainThreadScheduler, RxApp.TaskpoolScheduler));
-        services.TryAddKeyedSingleton<ICertificateSignatureService, RSACertificateSignatureService>("1.2.840.113549.1.1.1");
-        services.TryAddKeyedSingleton<ICertificateSignatureService, DSACertificateSignatureService>("1.2.840.10040.4.1");
+        services.TryAddKeyedSingleton<ICertificateSignatureService, RSACertificateSignatureService>(
+            "1.2.840.113549.1.1.1");
+        services.TryAddKeyedSingleton<ICertificateSignatureService, DSACertificateSignatureService>(
+            "1.2.840.10040.4.1");
         services.TryAddSingleton<IConsoleService, ConsoleService>();
         services.TryAddSingleton<IKnownFolders, KnownFolders>();
 
@@ -70,7 +72,9 @@ public static class ServiceCollectionExtensions
         _ = services.AddHttpClient<IBankOfEngland, BankOfEngland>();
         _ = services.AddHttpClient<IBankOfRussia, BankOfRussia>();
         _ = services.AddHttpClient<ICentralBankOfArmenia, CentralBankOfArmenia>()
-            .ConfigureHttpClient(config => config.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("TIKSN-Framework", typeof(ServiceCollectionExtensions).Assembly.GetName().Version?.ToString())));
+            .ConfigureHttpClient(config =>
+                config.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("TIKSN-Framework",
+                    typeof(ServiceCollectionExtensions).Assembly.GetName().Version?.ToString())));
         _ = services.AddHttpClient<IEuropeanCentralBank, EuropeanCentralBank>();
         _ = services.AddHttpClient<IFederalReserveSystem, FederalReserveSystem>();
         _ = services.AddHttpClient<INationalBankOfPoland, NationalBankOfPoland>();

@@ -8,7 +8,7 @@ public class PowerShellUserConfirmation : IUserConfirmation
 
     public PowerShellUserConfirmation(ICurrentCommandProvider currentCommandProvider) =>
         this.currentCommandProvider = currentCommandProvider
-        ?? throw new ArgumentNullException(nameof(currentCommandProvider));
+            ?? throw new ArgumentNullException(nameof(currentCommandProvider));
 
     public bool ShouldContinue(string query, string caption) =>
         this.currentCommandProvider.GetCurrentCommand().ShouldContinue(query, caption);

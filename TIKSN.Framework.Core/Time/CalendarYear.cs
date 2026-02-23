@@ -153,8 +153,8 @@ public readonly struct CalendarYear : IYear<CalendarYear>
 
     public DateInterval ToDateInterval()
     {
-        var startDate = new LocalDate(this.absoluteYear, 1, 1);
-        var endDate = new LocalDate(this.absoluteYear, 12, 31);
+        var startDate = new LocalDate(this.absoluteYear, month: 1, day: 1);
+        var endDate = new LocalDate(this.absoluteYear, month: 12, day: 31);
         return new DateInterval(startDate, endDate);
     }
 

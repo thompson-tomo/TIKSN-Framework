@@ -6,7 +6,7 @@ namespace TIKSN.Time;
 
 public readonly struct AcademicYear : IYear<AcademicYear>
 {
-    private static readonly AnnualDate StartDate = new(9, 1);
+    private static readonly AnnualDate StartDate = new(month: 9, day: 1);
     private readonly int absoluteStartYear;
 
     public AcademicYear(int startYear)

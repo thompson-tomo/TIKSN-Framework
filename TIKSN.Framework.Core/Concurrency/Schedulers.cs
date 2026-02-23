@@ -8,7 +8,7 @@ namespace TIKSN.Concurrency;
 public class Schedulers : ISchedulers
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Schedulers"/> class.
+    /// Initializes a new instance of the <see cref="Schedulers" /> class.
     /// </summary>
     /// <param name="mainThreadScheduler">The scheduler to use to schedule operations on the main thread.</param>
     /// <param name="taskPoolScheduler">The scheduler to use to schedule operations on the task pool.</param>

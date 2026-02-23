@@ -11,7 +11,7 @@ namespace TIKSN.Finance.ForeignExchange.Bank;
 /// <seealso cref="ICurrencyConverter" />
 public class NationalBankOfUkraine : INationalBankOfUkraine
 {
-    private static readonly string[] IgnoreList = ["___"];
+    private static readonly string[] IgnoreList = ["___",];
 
     private static readonly RegionInfo Ukraine = new("uk-UA");
 
@@ -20,7 +20,7 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
     private static readonly CurrencyInfo UkrainianHryvnia = new(Ukraine);
 
     private static readonly CompositeFormat WebServiceUrlFormat =
-                        CompositeFormat.Parse("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date={0:yyyyMMdd}");
+        CompositeFormat.Parse("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date={0:yyyyMMdd}");
 
     private readonly ICurrencyFactory currencyFactory;
     private readonly HttpClient httpClient;
@@ -51,7 +51,8 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
         ArgumentNullException.ThrowIfNull(baseMoney);
         ArgumentNullException.ThrowIfNull(counterCurrency);
 
-        var rate = await this.GetExchangeRateAsync(baseMoney.Currency, counterCurrency, asOn, cancellationToken).ConfigureAwait(false);
+        var rate = await this.GetExchangeRateAsync(baseMoney.Currency, counterCurrency, asOn, cancellationToken)
+            .ConfigureAwait(false);
 
         return new Money(counterCurrency, baseMoney.Amount * rate);
     }
@@ -68,7 +69,7 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
     {
         var records = await this.GetExchangeRatesAsync(asOn, cancellationToken).ConfigureAwait(false);
 
-        return [.. records.Select(item => item.Pair)];
+        return [.. records.Select(item => item.Pair),];
     }
 
     /// <summary>
@@ -99,8 +100,8 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
         var result = new HashSet<ExchangeRate>();
 
         foreach (var currencyElement in xdocument
-            ?.Element("exchange")
-            ?.Elements("currency") ?? [])
+                     ?.Element("exchange")
+                     ?.Elements("currency") ?? [])
         {
             var currencyCode = currencyElement?.Element("cc")?.Value;
 
@@ -109,7 +110,8 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
                 continue;
             }
 
-            var rate = decimal.Parse(currencyElement?.Element("rate")?.Value ?? string.Empty, CultureInfo.InvariantCulture);
+            var rate = decimal.Parse(currencyElement?.Element("rate")?.Value ?? string.Empty,
+                CultureInfo.InvariantCulture);
 
             if (!string.IsNullOrEmpty(currencyCode))
             {
@@ -150,7 +152,8 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
 
         if (baseCurrency == UkrainianHryvnia)
         {
-            var counterRate = await this.GetExchangeRateAsync(counterCurrency, asOn, cancellationToken).ConfigureAwait(false);
+            var counterRate = await this.GetExchangeRateAsync(counterCurrency, asOn, cancellationToken)
+                .ConfigureAwait(false);
 
             return 1m / counterRate;
         }
@@ -167,7 +170,7 @@ public class NationalBankOfUkraine : INationalBankOfUkraine
 
         var records = await this.GetExchangeRatesAsync(asOn, cancellationToken).ConfigureAwait(false);
         var record = records
-            .SingleOrDefault(item => item.Pair.BaseCurrency == currency)
+                .SingleOrDefault(item => item.Pair.BaseCurrency == currency)
             ?? throw CreatePairNotSupportedException(baseCurrency: null, currency);
 
         return record.Rate;

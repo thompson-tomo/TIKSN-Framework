@@ -23,7 +23,8 @@ public class RegistrationsTests : IDisposable
 
         _ = builder.ConfigureServices((_, services) => services.AddFrameworkCore());
 
-        _ = builder.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule<CoreModule>());
+        _ = builder.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+            containerBuilder.RegisterModule<CoreModule>());
 
         this.host = builder.Build();
     }

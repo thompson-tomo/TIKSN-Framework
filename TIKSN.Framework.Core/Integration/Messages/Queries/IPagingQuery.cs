@@ -8,4 +8,4 @@ public interface IPagingQuery
 }
 
 public interface IPagingQuery<TEntity>
-  : IQuery<PageResult<TEntity>>, IPagingQuery;
+    : IQuery<PageResult<TEntity>>, IPagingQuery;

@@ -9,7 +9,7 @@ public class CentralBankOfArmenia : ICentralBankOfArmenia
     private static readonly CurrencyInfo AMD = new(new RegionInfo("hy-AM"));
 
     private static readonly Uri RSS =
-            new("https://www.cba.am/_layouts/rssreader.aspx?rss=280F57B8-763C-4EE4-90E0-8136C13E47DA");
+        new("https://www.cba.am/_layouts/rssreader.aspx?rss=280F57B8-763C-4EE4-90E0-8136C13E47DA");
 
     private readonly ICurrencyFactory currencyFactory;
     private readonly HttpClient httpClient;
@@ -103,9 +103,9 @@ public class CentralBankOfArmenia : ICentralBankOfArmenia
         lock (this.oneWayRates)
         {
             foreach (var item in xdoc
-                ?.Element("rss")
-                ?.Element("channel")
-                ?.Elements("item") ?? [])
+                         ?.Element("rss")
+                         ?.Element("channel")
+                         ?.Elements("item") ?? [])
             {
                 var title = item.Element("title");
                 var pubDate = item.Element("pubDate");
@@ -158,7 +158,8 @@ public class CentralBankOfArmenia : ICentralBankOfArmenia
 
     private async Task FetchOnDemandAsync(DateTimeOffset asOn, CancellationToken cancellationToken)
     {
-        if (!this.publicationDate.HasValue || (this.timeProvider.GetUtcNow() - this.lastFetchDate > TimeSpan.FromDays(1d)))
+        if (!this.publicationDate.HasValue ||
+            this.timeProvider.GetUtcNow() - this.lastFetchDate > TimeSpan.FromDays(1d))
         {
             _ = await this.GetExchangeRatesAsync(asOn, cancellationToken).ConfigureAwait(false);
         }

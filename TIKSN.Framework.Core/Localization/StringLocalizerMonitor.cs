@@ -35,7 +35,7 @@ public class StringLocalizerMonitor : IStringLocalizer
     {
         if (localizedString.ResourceNotFound)
         {
-            this.logger.Log(this.options.Value.LogLevel, 414761847,
+            this.logger.Log(this.options.Value.LogLevel, eventId: 414761847,
                 $"Resource with name '{localizedString.Name}' is not found.", exception: null, (s, _) => s);
         }
 

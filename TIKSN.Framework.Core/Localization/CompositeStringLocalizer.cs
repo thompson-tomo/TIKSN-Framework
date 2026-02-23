@@ -30,7 +30,8 @@ public class CompositeStringLocalizer : IStringLocalizer
     {
         var localizedStrings = this.Localizers.Select(localizer => singleLocalizer(localizer)).ToArray();
 
-        var localizableStrings = localizedStrings.Where(item => !item.ResourceNotFound && !string.Equals(item.Name, item.Value, StringComparison.Ordinal))
+        var localizableStrings = localizedStrings.Where(item =>
+                !item.ResourceNotFound && !string.Equals(item.Name, item.Value, StringComparison.Ordinal))
             .ToArray();
 
         if (localizableStrings.Length > 0)

@@ -15,8 +15,8 @@ public static class PowerShellLoggerFactoryExtensions
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
         var provider = new PowerShellLoggerProvider(
-                    serviceProvider.GetRequiredService<ICurrentCommandProvider>(),
-                    serviceProvider.GetRequiredService<IOptions<PowerShellLoggerOptions>>());
+            serviceProvider.GetRequiredService<ICurrentCommandProvider>(),
+            serviceProvider.GetRequiredService<IOptions<PowerShellLoggerOptions>>());
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
         factory.AddProvider(provider);

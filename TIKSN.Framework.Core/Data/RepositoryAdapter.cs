@@ -18,10 +18,14 @@ public abstract class RepositoryAdapter<TDomainEntity, TDomainIdentity, TDataEnt
         IQueryRepository<TDataEntity, TDataIdentity> queryRepository,
         IStreamRepository<TDataEntity> streamRepository)
     {
-        this.DomainEntityToDataEntityMapper = domainEntityToDataEntityMapper ?? throw new ArgumentNullException(nameof(domainEntityToDataEntityMapper));
-        this.DataEntityToDomainEntityMapper = dataEntityToDomainEntityMapper ?? throw new ArgumentNullException(nameof(dataEntityToDomainEntityMapper));
-        this.DomainIdentityToDataIdentityMapper = domainIdentityToDataIdentityMapper ?? throw new ArgumentNullException(nameof(domainIdentityToDataIdentityMapper));
-        this.DataIdentityToDomainIdentityMapper = dataIdentityToDomainIdentityMapper ?? throw new ArgumentNullException(nameof(dataIdentityToDomainIdentityMapper));
+        this.DomainEntityToDataEntityMapper = domainEntityToDataEntityMapper ??
+            throw new ArgumentNullException(nameof(domainEntityToDataEntityMapper));
+        this.DataEntityToDomainEntityMapper = dataEntityToDomainEntityMapper ??
+            throw new ArgumentNullException(nameof(dataEntityToDomainEntityMapper));
+        this.DomainIdentityToDataIdentityMapper = domainIdentityToDataIdentityMapper ??
+            throw new ArgumentNullException(nameof(domainIdentityToDataIdentityMapper));
+        this.DataIdentityToDomainIdentityMapper = dataIdentityToDomainIdentityMapper ??
+            throw new ArgumentNullException(nameof(dataIdentityToDomainIdentityMapper));
         this.Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         this.QueryRepository = queryRepository ?? throw new ArgumentNullException(nameof(queryRepository));
         this.StreamRepository = streamRepository ?? throw new ArgumentNullException(nameof(streamRepository));

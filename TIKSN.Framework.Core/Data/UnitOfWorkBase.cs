@@ -14,6 +14,7 @@ public abstract class UnitOfWorkBase : IUnitOfWork
         {
             await this.DiscardAsync(default).ConfigureAwait(false);
         }
+
         GC.SuppressFinalize(this);
     }
 

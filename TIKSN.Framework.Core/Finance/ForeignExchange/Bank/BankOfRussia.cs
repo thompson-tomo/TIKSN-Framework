@@ -100,8 +100,8 @@ public class BankOfRussia : IBankOfRussia
             this.rates.Clear();
 
             foreach (var valuteElement in xdoc
-                ?.Element("ValCurs")
-                ?.Elements("Valute") ?? [])
+                         ?.Element("ValCurs")
+                         ?.Elements("Valute") ?? [])
             {
                 var charCodeElement = valuteElement.Element("CharCode");
 

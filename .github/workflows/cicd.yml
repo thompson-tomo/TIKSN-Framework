@@ -27,6 +27,7 @@ jobs:
         with:
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - name: "Install .NET Core SDK"
         uses: actions/setup-dotnet@v5.1.0
       - name: Install .NET MAUI
@@ -73,6 +74,7 @@ jobs:
         with:
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - name: "Download Artefact"
         uses: actions/download-artifact@v7.0.0
         with:

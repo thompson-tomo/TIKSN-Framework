@@ -10,7 +10,7 @@ public class UserBareEntityResolver<TEntity, TEntityIdentity, TUserIdentity>
 
     public UserBareEntityResolver(
         IQueryRepository<TEntity, TEntityIdentity> queryRepository)
-            => this.queryRepository = queryRepository ?? throw new ArgumentNullException(nameof(queryRepository));
+        => this.queryRepository = queryRepository ?? throw new ArgumentNullException(nameof(queryRepository));
 
     public async Task<UserEntity<TEntityIdentity, TUserIdentity>> ResolveAsync(
         TEntityIdentity id,

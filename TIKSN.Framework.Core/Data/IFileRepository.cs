@@ -27,7 +27,8 @@ public interface IFileRepository<TIdentity, TMetadata> where TIdentity : IEquata
     public Task<IFileInfo<TIdentity, TMetadata>> DownloadOnlyMetadataAsync(TIdentity id,
         CancellationToken cancellationToken);
 
-    public Task<IFile<TIdentity, TMetadata>> DownloadWithMetadataAsync(TIdentity id, CancellationToken cancellationToken);
+    public Task<IFile<TIdentity, TMetadata>> DownloadWithMetadataAsync(TIdentity id,
+        CancellationToken cancellationToken);
 
     public Task UploadAsync(TIdentity id, string path, byte[] content, TMetadata metadata,
         CancellationToken cancellationToken);

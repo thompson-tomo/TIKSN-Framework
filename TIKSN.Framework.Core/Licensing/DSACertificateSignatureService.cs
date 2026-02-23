@@ -29,6 +29,7 @@ public class DSACertificateSignatureService : ICertificateSignatureService
             publicCertificate.GetDSAPublicKey()
             ?? throw new InvalidOperationException("Public Certificate is missing");
 
-        return publicKey.VerifyData(data, signature, HashAlgorithmName.SHA1, DSASignatureFormat.IeeeP1363FixedFieldConcatenation);
+        return publicKey.VerifyData(data, signature, HashAlgorithmName.SHA1,
+            DSASignatureFormat.IeeeP1363FixedFieldConcatenation);
     }
 }
