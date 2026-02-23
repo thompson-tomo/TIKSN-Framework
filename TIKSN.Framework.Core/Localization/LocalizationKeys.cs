@@ -151,7 +151,7 @@ public static class LocalizationKeys
 
     /// <summary>
     /// Key: 225262334
-    /// Original Value: {0} class must have single constractor.
+    /// Original Value: {0} class must have single constructor.
     /// </summary>
     public static string Key225262334 => "225262334";
 

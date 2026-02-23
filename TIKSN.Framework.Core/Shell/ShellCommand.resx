@@ -127,7 +127,7 @@
     <value>No to All</value>
   </data>
   <data name="225262334" xml:space="preserve">
-    <value>{0} class must have single constractor.</value>
+    <value>{0} class must have single constructor.</value>
   </data>
   <data name="268507527" xml:space="preserve">
     <value>Yes to All</value>
